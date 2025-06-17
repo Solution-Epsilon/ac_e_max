@@ -262,15 +262,19 @@ def FIRE_R(stimuli, B, assembly, T):
     for i in B.neuron_list:
         i.flag = False ; i.f_1 = False
 
-e_max = True
-#n = 1000 ; p = .1 ; k = 37 ; beta = 0.05 ; T = 15 ; d = 3 ; tau = 30
-n = 1000 ; p = .5 ; k = 200 ; beta = 0.01 ; T = 20 ; d = 3 ; tau = 30 
+e_max = True #e_max = True (E%-winners-take-all) / False (k-winners-take-all)
+#Note: "k" means "k_s"
+#n = 1000 ; p = .1 ; k = 37 ; beta = 0.05 ; T = 15 ; d = 3 ; tau = 30 #Original model parameters
+n = 1000 ; p = .5 ; k = 200 ; beta = 0.01 ; T = 20 ; d = 3 ; tau = 30 #Adapted model parameters
 #inhibition == -.2
 #beta = [.1,.05,.01,.005,.001]
 
-# Multiple assemblies (same area)
+# Multiple assemblies (10 assembleies same area) 
+# Note: A total of 100 simulations were performed, each aiming to form 10 neural assemblies within one area. It is important 
+# to note that, due to certain limitations of the model, an assembly may occasionally fail to form. Therefore, in case of failure, 
+#the failed simulation must be rerun until data for 10 neural assemblies within the area is successfully generated. 
 '''
-L = [17, 32, 35]
+L = np.arange(0,100)
 for j in L:
     S = artificial_area(n,p,k,beta,d,tau,e_max, 0)
     A = artificial_area(n,p,k,beta,d,tau,e_max, 1)
@@ -281,7 +285,7 @@ for j in L:
     stimuli = []
     for i in range(0,10):
         #print(i)
-        set_test = S.sample_random_set(k)
+        set_test = S.sample_random_set(k) #When using the k-winners-take-all mechanism, the parameter k should be set to 200 in this model. For the original model parameters, set k to 37. 
         assembly,time_f = FIRE_F(set_test,A)
         if assembly != None:
             stimuli.append(set_test)
